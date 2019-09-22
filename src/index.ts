@@ -1,7 +1,8 @@
-import "reflect-metadata"
-import { ApolloServer } from "apollo-server";
-import { buildSchema } from "type-graphql";
+import 'reflect-metadata'
+import { ApolloServer } from 'apollo-server';
+import { buildSchema } from 'type-graphql';
 import Logger from './logger/logger';
+import { Updater } from './updater/updater';
 
 const PORT = process.env.PORT || 8080;
 
@@ -11,7 +12,7 @@ async function bootstrap() {
     resolvers: [],
   });
 
-  const production = process.env.NODE_ENV === "production"
+  const production = process.env.NODE_ENV === 'production'
 
   const server = new ApolloServer({
     schema,
@@ -22,4 +23,7 @@ async function bootstrap() {
   Logger.info(`Server is running at port ${serverInfo.port}. GraphQL Playground is ${production ? 'disabled' : `available at ${serverInfo.url}`}.`)
 }
 
-bootstrap()
+(async () => {
+  console.log(await Updater.getRoutes())
+})();
+// bootstrap()

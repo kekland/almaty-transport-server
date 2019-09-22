@@ -27,14 +27,19 @@
   "homepage": "https://github.com/kekland/graphql-typescript-server-template#readme",
   "dependencies": {
     "apollo-server": "^2.9.3",
+    "axios": "^0.19.0",
     "chalk": "^2.4.2",
+    "cheerio": "^1.0.0-rc.3",
     "graphql": "^14.5.7",
+    "lapisdb": "^0.4.4",
+    "lapisdb-lowdb-adapter": "0.0.2",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^0.17.5",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/cheerio": "^0.22.13",
     "rimraf": "^3.0.0",
     "ts-loader": "^6.1.2",
     "ts-node": "^8.4.1",

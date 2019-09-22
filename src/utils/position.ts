@@ -8,7 +8,7 @@ export class Position {
   lon: number;
 
   constructor(data: IPosition) {
-    if(data == null) {
+    if (data == null) {
       throw Error('Provided data is null.')
     }
     this.lat = data.lat
@@ -19,6 +19,4 @@ export class Position {
     // TODO
     return 0.0;
   }
-
-  
 }
