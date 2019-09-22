@@ -1,7 +1,7 @@
 {
-  "name": "graphql-typescript-server-template",
+  "name": "almaty-transport-server",
   "version": "0.0.1",
-  "description": "A template for GraphQL-supported TypeScript server",
+  "description": "A server for Almaty transport tracker (buses and subway)",
   "main": "build/index.js",
   "scripts": {
     "clean": "rimraf dist",
