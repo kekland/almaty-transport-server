@@ -19,4 +19,11 @@ export class Position {
     // TODO
     return 0.0;
   }
+
+  static fromApi(data: {X: number, Y: number}): Position {
+    return new Position({
+      lat: data.Y,
+      lon: data.X,
+    })
+  }
 }

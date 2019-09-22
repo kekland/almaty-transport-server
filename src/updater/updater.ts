@@ -3,8 +3,10 @@ import axios from 'axios'
 import { plainToClass } from 'class-transformer'
 import { TimestampUtils } from '../utils/utils';
 import * as HTMLParser from 'cheerio'
+import { IBusRouteResponse } from '../api/typings';
 
 const base: string = 'https://citybus.kz/'
+const baseApi: string = 'https://citybus.kz/almaty/Monitoring'
 
 export class Updater {
   static getRouteDataFromHtml(element: CheerioElement, type: RouteType): IRouteUnloadedData {
@@ -20,10 +22,11 @@ export class Updater {
       type,
     }
   }
-  static async getRouteInfo(route: string): Promise<Route> {
-    const response = await axios.get(`${base}/almaty/Monitoring/GetRouteInfo/${route}?_=${TimestampUtils.getCurrentMilliseconds()}`)
+  static async getRouteInfo(routeData: IRouteUnloadedData): Promise<Route> {
+    const response: IBusRouteResponse =
+      await axios.get(`${baseApi}/GetRouteInfo/${routeData}?_=${TimestampUtils.getCurrentMilliseconds()}`)
 
-    return plainToClass(Route, response.data)
+    return Route.fromApi(routeData, response)
   }
 
   static async getRoutes(): Promise<IRouteUnloadedData[]> {
@@ -31,8 +34,8 @@ export class Updater {
 
     const routes: IRouteUnloadedData[] = []
 
-    $('div .route-button-bus').each((index, el) => routes.push(this.getRouteDataFromHtml(el, 'bus')))
-    $('div .route-button-troll').each((index, el) => routes.push(this.getRouteDataFromHtml(el, 'trolleybus')))
+    $('div .route-button-bus').each((_, el) => routes.push(this.getRouteDataFromHtml(el, 'bus')))
+    $('div .route-button-troll').each((_, el) => routes.push(this.getRouteDataFromHtml(el, 'trolleybus')))
 
     return routes
   }

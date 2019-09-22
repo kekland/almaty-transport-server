@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server';
 import { buildSchema } from 'type-graphql';
 import Logger from './logger/logger';
 import { Updater } from './updater/updater';
+import { IRouteUnloadedData } from './routes/route';
 
 const PORT = process.env.PORT || 8080;
 
@@ -24,6 +25,8 @@ async function bootstrap() {
 }
 
 (async () => {
-  console.log(await Updater.getRoutes())
+  const routeInfos = await Updater.getRoutes()
+  console.log(await Updater.getRouteInfo(routeInfos.find((v) => v.name === '137') as IRouteUnloadedData))
+  // console.log(await Updater.getRoutes())
 })();
 // bootstrap()
