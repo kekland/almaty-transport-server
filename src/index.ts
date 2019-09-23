@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server';
 import { buildSchema } from 'type-graphql';
 import Logger from './logger/logger';
+import axios from 'axios'
 import { Updater } from './updater/updater';
 import { IRouteUnloadedData } from './routes/route';
 
@@ -26,7 +27,11 @@ async function bootstrap() {
 
 (async () => {
   const routeInfos = await Updater.getRoutes()
-  console.log(await Updater.getRouteInfo(routeInfos.find((v) => v.name === '137') as IRouteUnloadedData))
-  // console.log(await Updater.getRoutes())
+  const routeDataArray = []
+  let url = `https://citybus.kz/almaty/Monitoring/GetStatusInfo/X`
+  routeInfos.forEach((v) => url += `${v.id}X`)
+  url += '/1569158750?_=1569158755947'
+  console.log(url)
+  console.log(await axios.get('https://citybus.kz/almaty/Monitoring/GetStatusInfo//1569158787?_=1569158791508'))
 })();
 // bootstrap()

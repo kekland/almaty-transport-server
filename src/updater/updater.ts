@@ -23,10 +23,10 @@ export class Updater {
     }
   }
   static async getRouteInfo(routeData: IRouteUnloadedData): Promise<Route> {
-    const response: IBusRouteResponse =
-      await axios.get(`${baseApi}/GetRouteInfo/${routeData}?_=${TimestampUtils.getCurrentMilliseconds()}`)
+    const response =
+      await axios.get(`${baseApi}/GetRouteInfo/${routeData.id}?_=${TimestampUtils.getCurrentMilliseconds()}`)
 
-    return Route.fromApi(routeData, response)
+    return Route.fromApi(routeData, response.data as IBusRouteResponse)
   }
 
   static async getRoutes(): Promise<IRouteUnloadedData[]> {

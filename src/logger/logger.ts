@@ -17,10 +17,10 @@ const Logger = createLogger({
           ms(),
           printf(info => `${chalk.gray(info.timestamp)} ${info.level} ${chalk.gray(info.ms)}\n${info.message}`),
         ),
-      }
+      },
     ),
-    new transports.File({ filename: 'log0.log', format: json() })
-  ]
+    new transports.File({ filename: 'log0.log', format: json() }),
+  ],
 });
 
-export default Logger;
+export default Logger
