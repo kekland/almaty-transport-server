@@ -1,18 +1,12 @@
-export interface IPosition {
-  lat: number;
-  lon: number;
-}
+import { IApiPosition } from '../api/typings';
 
 export class Position {
   lat: number;
   lon: number;
 
-  constructor(data: IPosition) {
-    if (data == null) {
-      throw Error('Provided data is null.')
-    }
-    this.lat = data.lat
-    this.lon = data.lon
+  constructor(lat: number, lon: number) {
+    this.lat = lat
+    this.lon = lon
   }
 
   static getDistanceBetweenPositions(a: Position, b: Position): number {
@@ -20,10 +14,10 @@ export class Position {
     return 0.0;
   }
 
-  static fromApi(data: {X: number, Y: number}): Position {
-    return new Position({
-      lat: data.Y,
-      lon: data.X,
-    })
+  static fromApi(data: IApiPosition): Position {
+    return new Position(
+      data.Y,
+      data.X,
+    )
   }
 }

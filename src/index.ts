@@ -28,10 +28,14 @@ async function bootstrap() {
 (async () => {
   const routeInfos = await Updater.getRoutes()
   const routeDataArray = []
-  let url = `https://citybus.kz/almaty/Monitoring/GetStatusInfo/X`
-  routeInfos.forEach((v) => url += `${v.id}X`)
-  url += '/1569158750?_=1569158755947'
-  console.log(url)
-  console.log(await axios.get('https://citybus.kz/almaty/Monitoring/GetStatusInfo//1569158787?_=1569158791508'))
+
+  const routeData: IRouteUnloadedData = routeInfos.find(r => r.id === '86') as IRouteUnloadedData
+  const route = await Updater.getRouteInfo(routeData)
+
+  console.log(route)
+
+  const updates = await Updater.getRoutesUpdate([route])
+
+  console.log(updates)
 })();
 // bootstrap()
