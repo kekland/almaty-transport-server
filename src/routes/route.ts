@@ -2,6 +2,7 @@ import { Position } from '../utils/position';
 import { BusStop } from '../utils/stop';
 import { Vehicle, VehicleInformation } from '../utils/vehicle';
 import { IApiBusRoute, IApiVehicle } from '../api/typings';
+import { Model } from 'lapisdb';
 
 export type RouteType = 'bus' | 'trolleybus';
 
@@ -12,7 +13,7 @@ export interface IRouteUnloadedData {
   type: RouteType;
 }
 
-export class Route {
+export class Route extends Model<Route> {
   id!: string;
   name!: string;
   description?: string;
@@ -22,6 +23,7 @@ export class Route {
   type!: RouteType;
 
   constructor(id: string, name: string, description: string, points: Position[], stops: BusStop[], vehicles: VehicleInformation[], type: RouteType) {
+    super(Route)
     this.id = id
     this.name = name
     this.description = description

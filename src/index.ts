@@ -5,6 +5,7 @@ import Logger from './logger/logger';
 import axios from 'axios'
 import { Updater } from './updater/updater';
 import { IRouteUnloadedData } from './routes/route';
+import { launch } from './updater/process';
 
 const PORT = process.env.PORT || 8080;
 
@@ -26,16 +27,10 @@ async function bootstrap() {
 }
 
 (async () => {
-  const routeInfos = await Updater.getRoutes()
-  const routeDataArray = []
-
-  const routeData: IRouteUnloadedData = routeInfos.find(r => r.id === '86') as IRouteUnloadedData
-  const route = await Updater.getRouteInfo(routeData)
-
-  console.log(route)
-
-  const updates = await Updater.getRoutesUpdate([route])
-
-  console.log(updates)
+  await launch({
+    queuerInterval: 1500,
+    routeUpdateInterval: 3600,
+    vehicleUpdateInterval: 1600,
+  })
 })();
 // bootstrap()
