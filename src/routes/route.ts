@@ -79,6 +79,7 @@ export class RouteUpdate {
   }
 
   static fromApi(data: IApiVehicle[]) {
+    if (!data) data = []
     return new RouteUpdate(
       data.map((v) => Vehicle.fromApi(v)),
     );

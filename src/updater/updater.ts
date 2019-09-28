@@ -5,14 +5,21 @@ import { TimestampUtils } from '../utils/utils';
 import * as HTMLParser from 'cheerio'
 import { IApiBusRoute } from '../api/typings';
 import { BusStop } from '../utils/stop';
+import Logger from '../logger/logger';
 
 const base: string = 'https://citybus.kz/'
 const baseApi: string = 'https://citybus.kz/almaty/Monitoring'
 
 export class Updater {
   static async request(url: string): Promise<any> {
-    const response = await axios.get(url, { params: { _: TimestampUtils.getCurrentMilliseconds() } })
-    return response.data
+    try {
+      const response = await axios.get(url, { params: { _: TimestampUtils.getCurrentMilliseconds() } })
+      return response.data
+    }
+    catch (e) {
+      console.trace(e)
+      Logger.error(e)
+    }
   }
 
   static getRouteDataFromHtml(element: CheerioElement, type: RouteType): IRouteUnloadedData {
@@ -52,9 +59,9 @@ export class Updater {
   }
 
   static async getRoutesUpdate(routes: Route[], lastUpdateTime: number = 0): Promise<RouteUpdate> {
-    if (routes.length > 10) {
+    /* if (routes.length > 25) {
       throw Error('Too many routes batched in single update')
-    }
+    } */
 
     let routesString = 'X'
 

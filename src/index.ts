@@ -28,9 +28,9 @@ async function bootstrap() {
 
 (async () => {
   await launch({
-    queuerInterval: 1500,
+    queuerInterval: 1000,
     routeUpdateInterval: 3600,
-    vehicleUpdateInterval: 1600,
+    vehicleUpdateInterval: 10000,
   })
 })();
 // bootstrap()
