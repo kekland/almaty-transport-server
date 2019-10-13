@@ -1,5 +1,5 @@
 import { Datastore, DatastoreManager } from 'lapisdb';
-import { Route } from '../routes/route';
+import { Route, RouteSlim } from '../routes/route';
 import { Resolver, Field, ArgsType, Query, Args, Subscription, Root, PubSubEngine, Arg } from 'type-graphql';
 import { IsArray, IsString } from 'class-validator';
 import { join } from 'path';
@@ -21,10 +21,15 @@ export class RouteResolver {
   }
 
   @Query(returns => [Route])
-  async routes(@Args() { routes }: GetRoutesArgs) {
-    // sample implementation
+  async routeData(@Args() { routes }: GetRoutesArgs) {
     const routesToPick = routes.filter((v, i) => i < 7)
+
     return this.datastore.getItems((r) => routesToPick.includes(r.id))
+  }
+
+  @Query(returns => [RouteSlim])
+  async routes() {
+    return (await this.datastore.getItems()).map(v => new RouteSlim(v))
   }
 
   @Subscription({

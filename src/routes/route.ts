@@ -90,6 +90,28 @@ export class Route extends Model<Route> {
   }
 }
 
+@ObjectType()
+export class RouteSlim {
+  @Field(type => ID)
+  id!: string;
+
+  @Field()
+  name!: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field()
+  type!: RouteType;
+
+  constructor(route: Route) {
+    this.id = route.id
+    this.name = route.name
+    this.description = route.description
+    this.type = route.type
+  }
+}
+
 export class RouteUpdate {
   vehicles!: Vehicle[];
 
