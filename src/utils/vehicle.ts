@@ -6,7 +6,8 @@ export class Vehicle {
   routeId?: string;
   position!: Position;
   heading!: number;
-  lastUpdated?: Date;
+  velocity?: number;
+  lastUpdated!: Date;
 
   constructor(id: string, position: Position, heading: number, routeId?: string) {
     this.id = id
@@ -18,6 +19,16 @@ export class Vehicle {
 
   static fromApi(data: IApiVehicle, routeId?: string): Vehicle {
     return new Vehicle(data.Id.toString(), new Position(data.LT, data.LN), data.AZ, routeId);
+  }
+
+  updateWith(newVehicle: Vehicle) {
+    this.heading = newVehicle.heading
+    this.velocity =
+      Position.getDistanceBetweenPositions(this.position, newVehicle.position) /
+      ((newVehicle.lastUpdated.getTime() - this.lastUpdated.getTime()) / 1000)
+
+    this.position = newVehicle.position
+    this.lastUpdated = newVehicle.lastUpdated
   }
 }
 

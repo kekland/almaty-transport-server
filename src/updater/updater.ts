@@ -6,6 +6,7 @@ import * as HTMLParser from 'cheerio'
 import { IApiBusRoute } from '../api/typings';
 import { BusStop } from '../utils/stop';
 import Logger from '../logger/logger';
+import { getUserAgent } from './agent';
 
 const base: string = 'https://citybus.kz/'
 const baseApi: string = 'https://citybus.kz/almaty/Monitoring'
@@ -13,7 +14,7 @@ const baseApi: string = 'https://citybus.kz/almaty/Monitoring'
 export class Updater {
   static async request(url: string): Promise<any> {
     try {
-      const response = await axios.get(url, { params: { _: TimestampUtils.getCurrentMilliseconds() } })
+      const response = await axios.get(url, { params: { _: TimestampUtils.getCurrentMilliseconds() }, headers: { 'User-Agent': getUserAgent() } })
       return response.data
     }
     catch (e) {

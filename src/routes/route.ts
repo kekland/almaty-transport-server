@@ -49,7 +49,12 @@ export class Route extends Model<Route> {
     this.vehicles.forEach((v) => {
       const updated = update.getVehicleWithId(v.id)
       if (updated) {
-        v.lastUpdate = updated
+        if (v.lastUpdate) {
+          v.lastUpdate.updateWith(updated)
+        }
+        else {
+          v.lastUpdate = updated
+        }
       }
     })
   }

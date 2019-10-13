@@ -323,3 +323,7 @@ const userAgents: string[] = [
   'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',
   'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36',
 ]
+
+export const getUserAgent = (): string => {
+  return userAgents[Math.round(Math.random() * (userAgents.length - 1))]
+}
