@@ -3,6 +3,9 @@ import { BusStop } from '../utils/stop';
 import { Vehicle, VehicleInformation } from '../utils/vehicle';
 import { IApiBusRoute, IApiVehicle } from '../api/typings';
 import { Model } from 'lapisdb';
+import { ObjectType, Field, ID } from 'type-graphql';
+import Logger from '../logger/logger';
+import { Type } from 'class-transformer';
 
 export type RouteType = 'bus' | 'trolleybus';
 
@@ -13,13 +16,30 @@ export interface IRouteUnloadedData {
   type: RouteType;
 }
 
+@ObjectType()
 export class Route extends Model<Route> {
+  @Field(type => ID)
   id!: string;
+
+  @Field()
   name!: string;
+
+  @Field({ nullable: true })
   description?: string;
+
+  @Field(type => [Position])
+  @Type(() => Position)
   points!: Position[];
+
+  @Field(type => [BusStop])
+  @Type(() => BusStop)
   stops!: BusStop[];
+
+  @Field(type => [VehicleInformation])
+  @Type(() => VehicleInformation)
   vehicles!: VehicleInformation[];
+
+  @Field()
   type!: RouteType;
 
   constructor(id: string, name: string, description: string, points: Position[], stops: BusStop[], vehicles: VehicleInformation[], type: RouteType) {
@@ -65,13 +85,7 @@ export class Route extends Model<Route> {
     this.description = update.description
     this.points = update.points
     this.stops = update.stops
-    this.vehicles = update.vehicles.map((updatedVehicle) => {
-      const oldVehicle = this.vehicles.find(v => v.id === updatedVehicle.id)
-      if (oldVehicle) {
-        updatedVehicle.lastUpdate = oldVehicle.lastUpdate
-      }
-      return updatedVehicle
-    })
+    this.vehicles = update.vehicles
     this.type = update.type
   }
 }

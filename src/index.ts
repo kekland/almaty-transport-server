@@ -1,36 +1,33 @@
 import 'reflect-metadata'
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, PubSub } from 'apollo-server';
 import { buildSchema } from 'type-graphql';
 import Logger from './logger/logger';
 import axios from 'axios'
 import { Updater } from './updater/updater';
-import { IRouteUnloadedData } from './routes/route';
-import { launch } from './updater/process';
+import { IRouteUnloadedData, Route } from './routes/route';
+import { launchUpdater } from './updater/updaterProcess';
+import { Datastore, DatastoreManager } from 'lapisdb';
+import { LowDbAdapter } from 'lapisdb-lowdb-adapter';
+import { launchApi } from './updater/apiProcess';
 
 const PORT = process.env.PORT || 8080;
 
 async function bootstrap() {
-  const schema = await buildSchema({
-    // IMPORTANT: Add resolvers here
-    resolvers: [],
-  });
+  const datastore = new Datastore<Route>('routes', Route, new LowDbAdapter(Route, {
+    name: 'routes',
+    directory: './db',
+  }))
 
-  const production = process.env.NODE_ENV === 'production'
+  DatastoreManager.register(datastore)
+  const pubSubEngine = new PubSub()
 
-  const server = new ApolloServer({
-    schema,
-    playground: !production,
-  });
-
-  const serverInfo = await server.listen(PORT);
-  Logger.info(`Server is running at port ${serverInfo.port}. GraphQL Playground is ${production ? 'disabled' : `available at ${serverInfo.url}`}.`)
-}
-
-(async () => {
-  await launch({
+  await launchUpdater({
     queuerInterval: 1000,
     routeUpdateInterval: 3600,
     vehicleUpdateInterval: 10000,
-  })
-})();
-// bootstrap()
+  }, pubSubEngine)
+
+  await launchApi(8080, pubSubEngine)
+}
+
+bootstrap()

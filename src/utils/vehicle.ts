@@ -1,12 +1,28 @@
 import { Position } from './position';
 import { IApiVehicle, IApiVehicleInformation } from '../api/typings';
+import { ObjectType, Field, ID, Int } from 'type-graphql';
+import { Type } from 'class-transformer';
 
+@ObjectType()
 export class Vehicle {
+  @Field(type => ID)
   id!: string;
+
+  @Field({ nullable: true })
   routeId?: string;
+
+  @Field(type => Position)
+  @Type(() => Position)
   position!: Position;
+
+  @Field(type => Int)
   heading!: number;
+
+  @Field({ nullable: true })
   velocity?: number;
+
+  @Field()
+  @Type(() => Date)
   lastUpdated!: Date;
 
   constructor(id: string, position: Position, heading: number, routeId?: string) {
@@ -18,7 +34,7 @@ export class Vehicle {
   }
 
   static fromApi(data: IApiVehicle, routeId?: string): Vehicle {
-    return new Vehicle(data.Id.toString(), new Position(data.LT, data.LN), data.AZ, routeId);
+    return new Vehicle(data.Id.toString(), Position.fromApiWithDecryption(data), data.AZ, routeId);
   }
 
   updateWith(newVehicle: Vehicle) {
@@ -32,13 +48,25 @@ export class Vehicle {
   }
 }
 
+@ObjectType()
 export class VehicleInformation {
+  @Field(type => ID)
   id!: string;
+
+  @Field({ nullable: true })
   make?: string;
+
+  @Field({ nullable: true })
   makeCountry?: string;
+
+  @Field({ nullable: true })
   makeYear?: string;
+
+  @Field({ nullable: true })
   licenseId?: string;
 
+  @Field(type => Vehicle, { nullable: true })
+  @Type(() => Vehicle)
   lastUpdate?: Vehicle;
 
   constructor(id: string, make?: string, makeCountry?: string, makeYear?: string, licenseId?: string, lastUpdate?: Vehicle) {

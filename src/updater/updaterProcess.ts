@@ -4,20 +4,15 @@ import { Route, RouteUpdate } from '../routes/route';
 import Logger from '../logger/logger';
 import { Updater } from './updater';
 import { Queuer } from './queuer';
+import { PubSub } from 'apollo-server';
 export interface IUpdaterProcessConfiguration {
   queuerInterval: number;
   vehicleUpdateInterval: number;
   routeUpdateInterval: number;
 }
 
-export const launch = async (conf: IUpdaterProcessConfiguration) => {
-  const datastore = new Datastore<Route>('routes', Route, new LowDbAdapter(Route, {
-    name: 'routes',
-    directory: './db',
-  }))
-
-  DatastoreManager.register(datastore)
-
+export const launchUpdater = async (conf: IUpdaterProcessConfiguration, pubSubEngine: PubSub) => {
+  const datastore = DatastoreManager.get(Route)
   const vehicleUpdaterQueuer = new Queuer(conf.vehicleUpdateInterval)
   const routeUpdaterQueuer = new Queuer(conf.routeUpdateInterval)
   const queuer = new Queuer(conf.queuerInterval)
@@ -25,6 +20,8 @@ export const launch = async (conf: IUpdaterProcessConfiguration) => {
   const updateRoute = async (route: Route) => {
     // Logger.info(`Saving route ${route.name} ${route.id}`)
     const item = await datastore.get(route.id)
+    pubSubEngine.publish(route.id, route)
+
     if (item) {
       item.applyUpdate(route)
       await item.save()
