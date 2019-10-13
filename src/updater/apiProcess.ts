@@ -17,6 +17,12 @@ export const launchApi = async (port: number, pubSubEngine: PubSub) => {
   const server = new ApolloServer({
     schema,
     playground: !production,
+    subscriptions: {
+      path: '/subscriptions',
+      onConnect: (v, s, c) => {
+        Logger.info(`Incoming WebSocket connection, ${c.request.url}`)
+      },
+    },
   });
 
   const serverInfo = await server.listen(port);
