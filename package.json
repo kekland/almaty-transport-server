@@ -35,7 +35,7 @@
     "lapisdb": "^0.4.4",
     "lapisdb-lowdb-adapter": "0.0.2",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.5",
+    "type-graphql": "^0.17.6",
     "winston": "^3.2.1"
   },
   "devDependencies": {
